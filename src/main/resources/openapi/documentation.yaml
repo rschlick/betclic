@@ -1,23 +1,90 @@
 openapi: "3.0.3"
 info:
-  title: "Application API"
-  description: "Application API"
+  title: "Tournoi API"
+  description: "API pour gérer un classement de joueurs lors d'un tournoi"
   version: "1.0.0"
 servers:
   - url: "http://127.0.0.1:8080"
 paths:
-  /:
-    get:
-      description: "Hello World!"
+  /players:
+    post:
+      description: "Ajouter un nouveau joueur"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Player"
       responses:
         "200":
           description: "OK"
           content:
-            text/plain:
+            application/json:
               schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "Hello World!"
+                $ref: "#/components/schemas/Player"
+    get:
+      description: "Récupérer la liste de tous les joueurs, triés par points"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Player"
+    delete:
+      description: "Supprimer tous les joueurs"
+      responses:
+        "204":
+          description: "Aucun contenu"
+  /players/{id}:
+    get:
+      description: "Récupérer les informations d'un joueur spécifique"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Player"
+    put:
+      description: "Mettre à jour les points d'un joueur"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Player"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Player"
 components:
   schemas:
+    Player:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        pseudo:
+          type: "string"
+        points:
+          type: "integer"
+      required:
+        - "id"
+        - "pseudo"
+        - "points"
